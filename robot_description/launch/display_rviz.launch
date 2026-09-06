@@ -1,0 +1,5 @@
+<launch>
+  <arg name="rviz" default="true"/>
+  <arg name="rvizconfig" default="$(find robot_description)/rviz/urdf.rviz" />
+  <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>

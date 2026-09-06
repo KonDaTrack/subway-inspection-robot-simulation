@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find base_controller)/launch/movebase_with_amcl.launch" />
+    <node pkg="waterplus_map_tools" type="wp_manager" name="wp_manager" output="screen">
+        <param name="load" type="string" value="/home/robot/waypoints.xml"/> 
+    </node>
+</launch>

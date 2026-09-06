@@ -1,0 +1,14 @@
+XYFirstPlanner:
+  # 可能需要稍微增加容差，因为分阶段控制可能会累积误差
+  xy_goal_tolerance: 0.05
+  yaw_goal_tolerance: 0.05
+  
+  # 可能需要调整增益，因为现在每个方向单独控制
+  p_xy_gain: 1.0
+  p_yaw_gain: 4.0
+  
+  # 其他参数保持不变
+  max_vel_x: 0.3
+  max_vel_y: 0.3
+  max_vel_theta: 1.0
+  lookahead_distance: 0.5

@@ -1,0 +1,70 @@
+<!-- display_panda_gazebo.launch -->
+<launch>
+  <env name="__NV_PRIME_RENDER_OFFLOAD" value="1"/>
+  <env name="__GLX_VENDOR_LIBRARY_NAME" value="nvidia"/>
+  <env name="LIBGL_ALWAYS_SOFTWARE" value="0"/>
+  <env name="OGRE_RTT_MODE" value="Copy"/>
+  
+  <!-- Gazebo世界文件 -->
+  <arg name="world_name" default="empty.world"/>
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- 机器人初始位置 -->
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="0.0"/>
+  <arg name="roll" default="0.0"/>
+  <arg name="pitch" default="0.0"/>
+  <arg name="yaw" default="0.0"/>
+
+  <!-- Panda机械臂参数 -->
+  <arg name="arm_id" default="panda"/>
+  <arg name="in_gazebo" default="true"/>
+
+  <!-- 启动Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find wpr_simulation)/worlds/robocup_home.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <!-- 加载Panda机械臂描述 -->
+  <!-- 使用panda_arm_hand.urdf.xacro，但设置load_gripper=false, use_gazebo_control=true -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find robot_description)/urdf/panda.urdf.xacro' in_gazebo:=true " />
+
+  <!-- 在Gazebo中生成机器人 -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -model panda_robot -param robot_description 
+              -x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+
+  <!-- 机器人状态发布器 -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  <!-- 加载Panda机械臂控制器配置 -->
+  <rosparam file="$(find robot_description)/config/panda_controllers.yaml" command="load"/>
+  
+  <!-- 启动控制器管理器 -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" args="joint_state_controller
+                              panda_joint1_position_controller
+                              panda_joint2_position_controller
+                              panda_joint3_position_controller
+                              panda_joint4_position_controller
+                              panda_joint5_position_controller
+                              panda_joint6_position_controller
+                              panda_joint7_position_controller"/>
+
+  <!-- RViz配置 -->
+  <arg name="rvizconfig" default="$(find robot_description)/rviz/urdf.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>

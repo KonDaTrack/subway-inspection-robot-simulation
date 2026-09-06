@@ -1,0 +1,25 @@
+<launch>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+        <rosparam file="$(find base_controller)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find base_controller)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find base_controller)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find base_controller)/config/global_costmap_params.yaml" command="load" />
+        
+        <!-- 全局规划器配置 -->
+        <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+        <param name="planner_frequency" value="1.0" />
+        <param name="planner_patience" value="5.0" />
+        
+        <!-- 局部规划器配置 - 使用自定义XYFirst规划器 -->
+        <param name="base_local_planner" value="base_controller/XYFirstPlanner" />
+        <param name="controller_frequency" value="10.0" />
+        <param name="controller_patience" value="15.0" />
+        
+        <!-- 恢复行为配置 -->
+        <param name="recovery_behavior_enabled" value="true" />
+        <param name="clearing_rotation_allowed" value="true" />
+        
+        <!-- 加载自定义XYFirst规划器参数 -->
+        <rosparam file="$(find base_controller)/config/xy_first_planner_params.yaml" command="load" />
+    </node>
+</launch>

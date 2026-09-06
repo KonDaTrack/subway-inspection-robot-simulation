@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# catkin build artifacts (若在工作区内构建)
+build/
+devel/
+install/
+
+# 日志
+*.log
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store

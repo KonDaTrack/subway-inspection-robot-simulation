@@ -1,0 +1,66 @@
+TebLocalPlannerROS:
+  # 全向机器人配置
+  holonomic: true
+  max_vel_x: 0.4
+  max_vel_x_backwards: 0.4
+  max_vel_y: 0.3
+  max_vel_theta: 1.0
+  
+  acc_lim_x: 0.5
+  acc_lim_y: 0.5
+  acc_lim_theta: 1.0
+
+  min_obstacle_dist: 0.05  # 最小障碍物距离（狭窄空间中增加安全距离）
+  inflation_dist: 0.15     # 膨胀距离（狭窄空间中增加安全距离）
+  
+  # ============== 修改部分：优化权重调整 ==============
+  # 当前配置保持全向特性，但调整权重促进"先XY后角度"
+  weight_kinematics_forward_drive: 0.0  # 全向机器人设为0，保持
+  weight_optimaltime: 1.0               # 时间最优权重
+  
+  # 稍微降低转向权重，防止过早旋转
+  weight_kinematics_turning: 1.0        # 新增：转向运动权重（默认为1.0）
+  
+  weight_obstacle: 50.0                 # 障碍物权重
+  weight_inflation: 10                  # 膨胀区域权重
+  weight_kinematics_turning_radius: 0.0 # 全向机器人设为0
+  weight_shortest_path: 2.0             # 最短路径权重，鼓励更直接的路径
+  weight_kinematics_nh: 0.0             # 非完整约束权重，全向机器人设为0
+  
+  # ============== 关键修改：目标点容差 ==============
+  # 实现"先XY后角度"的核心参数
+  xy_goal_tolerance: 0.05        # 减小XY容差：从0.1改为0.05米（更精确到达位置）
+  yaw_goal_tolerance: 0.1        # 角度容差保持0.1弧度（约5.7度）
+  free_goal_vel: false           # 重要修改：从true改为false！到达目标时速度必须为0
+  
+  # ============== 新增参数：角度对准优化 ==============
+  # 这些参数确保到达XY位置后才开始精细调整角度
+  min_turning_radius: 0.0        # 最小转弯半径（全向为0）
+  feasibility_check_no_poses: 8  # 保持可行性检查
+  
+  # ============== 轨迹参数保持 ==============
+  penalty_epsilon: 0.1          # 优化容忍度
+  no_inner_iterations: 5        # 内迭代次数
+  no_outer_iterations: 3        # 外迭代次数
+  optimization_activate: true
+  
+  dt_ref: 0.3                   # 参考时间步长
+  dt_hysteresis: 0.1            # 时间步长滞后
+  min_samples: 3                # 最小轨迹样本数
+  max_samples: 500              # 最大轨迹样本数
+  
+  # ============== 倒车优化参数保持 ==============
+  enable_homotopy_class_planning: true  # 启用同伦类规划
+  enable_multithreading: true           # 启用多线程
+  max_number_classes: 6                 # 最大同伦类数量
+  
+  # ============== 倒车特定参数保持 ==============
+  max_vel_x_backwards: 0.4              # 最大倒车速度
+  weight_backward_motion: -1.0          # 倒车运动负权重
+  
+  # ============== 新增：调试参数（可选） ==============
+  # 如果需要调试，可以添加这些可视化参数
+  # visualization:
+  #   publish_robot_global_plan: true
+  #   publish_teb_poses: true
+  #   publish_cost_grid_pc: true

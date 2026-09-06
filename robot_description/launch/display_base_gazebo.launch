@@ -1,0 +1,58 @@
+<!-- display_fixed.launch -->
+<launch>
+  <env name="__NV_PRIME_RENDER_OFFLOAD" value="1"/>
+  <env name="__GLX_VENDOR_LIBRARY_NAME" value="nvidia"/>
+  <env name="LIBGL_ALWAYS_SOFTWARE" value="0"/>
+  <env name="OGRE_RTT_MODE" value="Copy"/>
+  <!-- Gazebo世界文件 -->
+  <arg name="world_name" default="empty.world"/>
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- 机器人初始位置 -->
+  <arg name="x" default="-4.0"/>
+  <arg name="y" default="1.5"/>
+  <arg name="z" default="0.0"/>
+  <arg name="roll" default="0.0"/>
+  <arg name="pitch" default="0.0"/>
+  <arg name="yaw" default="0.0"/>
+
+  <!-- 启动Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find robot_description)/world/metro.world"/>
+    <!-- <arg name="world_name" value="empty.world"/> -->
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <!-- 加载WPR2机器人描述 -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find robot_description)/urdf/robot.urdf.xacro'" />
+
+  <!-- 在Gazebo中生成机器人 -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -model robot -param robot_description 
+              -x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  <rosparam file="$(find robot_description)/config/robot_controllers.yaml" command="load"/>
+
+  <include file="$(find robot_moveit_config)/launch/move_group.launch" />
+  <rosparam file="$(find robot_description)/config/panda_controllers_gazebo.yaml" command="load"/>
+  
+  <node pkg="wpr_simulation" type="lidar_filter" name="lidar_filter" />
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" args="joint_state_controller panda_arm_controller">
+  </node>
+
+</launch>

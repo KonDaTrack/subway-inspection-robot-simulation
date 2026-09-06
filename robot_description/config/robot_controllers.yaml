@@ -1,0 +1,55 @@
+gazebo_ros_control:
+  pid_gains:
+    front_left_wheel_joint: {p: 100.0, i: 0.0, d: 0.0}
+    front_right_wheel_joint: {p: 100.0, i: 0.0, d: 0.0}
+    back_left_wheel_joint: {p: 100.0, i: 0.0, d: 0.0}
+    back_right_wheel_joint: {p: 100.0, i: 0.0, d: 0.0}
+    panda_joint1: {p: 1000.0, i: 0.0, d: 0.1}
+    panda_joint2: {p: 1000.0, i: 0.0, d: 0.1}
+    panda_joint3: {p: 1000.0, i: 0.0, d: 0.1}
+    panda_joint4: {p: 1000.0, i: 0.0, d: 0.1}
+    panda_joint5: {p: 1000.0, i: 0.0, d: 0.1}
+    panda_joint6: {p: 1000.0, i: 0.0, d: 0.1}
+    panda_joint7: {p: 1000.0, i: 0.0, d: 0.1}
+      
+# 控制器定义
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+  publish_to_topic: "/joint_states"
+  joints:
+    - front_left_wheel_joint
+    - front_right_wheel_joint
+    - back_left_wheel_joint
+    - back_right_wheel_joint
+    - panda_joint1
+    - panda_joint2
+    - panda_joint3
+    - panda_joint4
+    - panda_joint5
+    - panda_joint6
+    - panda_joint7
+
+# Panda机械臂轨迹控制器
+panda_arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - panda_joint1
+    - panda_joint2
+    - panda_joint3
+    - panda_joint4
+    - panda_joint5
+    - panda_joint6
+    - panda_joint7
+  constraints:
+    goal_time: 0.6
+    stopped_velocity_tolerance: 0.05
+    panda_joint1: {trajectory: 0.1, goal: 0.1}
+    panda_joint2: {trajectory: 0.1, goal: 0.1}
+    panda_joint3: {trajectory: 0.1, goal: 0.1}
+    panda_joint4: {trajectory: 0.1, goal: 0.1}
+    panda_joint5: {trajectory: 0.1, goal: 0.1}
+    panda_joint6: {trajectory: 0.1, goal: 0.1}
+    panda_joint7: {trajectory: 0.1, goal: 0.1}
+  state_publish_rate: 50
+  action_monitor_rate: 10

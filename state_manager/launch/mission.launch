@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find base_controller)/launch/movebase_with_amcl.launch" />
+    <node pkg="arm_controller" type="arm_move_service.py" name="arm_move_service" output="screen" />
+</launch>

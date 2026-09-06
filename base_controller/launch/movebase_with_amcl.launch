@@ -1,0 +1,10 @@
+<launch>
+    <include file="$(find robot_description)/launch/display_base_gazebo.launch" />
+    <include file="$(find base_controller)/launch/amcl_test.launch" />
+    <include file="$(find base_controller)/launch/movebase.launch" />
+    <include file="$(find base_controller)/launch/display_rviz.launch" />
+      <!-- Map tools  -->
+    <node pkg="waterplus_map_tools" type="wp_manager" name="wp_manager" output="screen">
+        <param name="load" type="string" value="/home/robot/catkin_ws/src/waterplus_map_tools/waypoints.xml"/> 
+    </node>
+</launch>

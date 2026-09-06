@@ -1,0 +1,8 @@
+<library path="libbase_controller">
+<class name="base_controller/XYFirstPlanner" type="base_controller::XYFirstPlanner" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      XY-First local planner for omnidirectional robots. This planner prioritizes XY movement over rotation,
+      moving to the target position first, then adjusting orientation.
+    </description>
+  </class>
+</library>
