@@ -58,11 +58,11 @@ ROS Noetic + Gazebo 仿真项目:**一台麦克纳姆轮全向底盘 + 一台 Fr
 
 ### 方式 A:用封装好的 Docker 镜像(推荐,开箱即用)
 
-已封装为 **`metro_detection_robot`** 镜像,内含:编译好的完整工作区、预置地图与 16 个导航点、机械臂位姿、已修复的环境与 `.bashrc`。
+已封装为 GHCR 公开镜像 **`ghcr.io/kondatrack/subway-inspection-robot-simulation`**,内含:编译好的完整工作区、预置地图与 16 个导航点、机械臂位姿、已修复的环境与 `.bashrc`。
 
 ```bash
-# 1. 导入镜像(拿到 .tar 时)
-docker load -i metro_detection_robot.tar
+# 1. 拉取镜像(离线环境可用 docker load -i metro_detection_robot.tar 代替)
+docker pull ghcr.io/kondatrack/subway-inspection-robot-simulation:latest
 
 # 2. 宿主机放行 X11(GUI,重启宿主机后需重跑一次)
 xhost +local: >> /dev/null
@@ -78,7 +78,7 @@ docker run -dit \
   -e NVIDIA_VISIBLE_DEVICES=all \
   -e NVIDIA_DRIVER_CAPABILITIES=all \
   --net=host \
-  metro_detection_robot:latest
+  ghcr.io/kondatrack/subway-inspection-robot-simulation:latest
 
 # 4. 进入容器(ROS 与工作区环境已自动加载)
 docker exec -it metro_robot bash
