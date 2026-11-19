@@ -19,6 +19,10 @@ ROS Noetic + Gazebo 仿真项目:**一台麦克纳姆轮全向底盘 + 一台 Fr
 
 ## 机器人 & 场景
 
+![地铁站仿真场景(Gazebo)](./docs/images/gazebo-metro-scene.png)
+
+*Gazebo 中的地铁站仿真场景:麦克纳姆轮底盘 + Franka Panda 机械臂*
+
 ```
         ┌───────────────┐
         │  Franka Panda │  7-DOF 机械臂 (MoveIt / move_group)
